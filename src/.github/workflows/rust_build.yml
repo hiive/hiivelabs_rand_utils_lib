@@ -1,0 +1,40 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "development" ]
+  pull_request:
+    branches: [ "development" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/hiivelabs_rand_utils_lib
+
+    - name: Cache Cargo Registry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          workspace/**/target
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-registry-        
+
+    - name: Build
+      run: cargo build --verbose
+      working-directory: ./workspace/hiivelabs_rand_utils_lib
+
+    - name: Run tests
+      run: cargo test --verbose
+      working-directory: ./workspace/hiivelabs_rand_utils_lib
+
