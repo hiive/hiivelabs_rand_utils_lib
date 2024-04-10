@@ -1,0 +1,61 @@
+use crate::random::seed_utils_impl::{
+    create_seed_from_bytes, create_seed_from_guid_bytes_x_y, create_seed_from_guid_x_y,
+};
+use uuid::Uuid;
+
+#[test]
+fn test_create_seed_from_guid_x_y() {
+    let bytes = [
+        0xa1, 0xa2, 0xa3, 0xa4, 0xb1, 0xb2, 0xc1, 0xc2, 0xd1, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
+        0xd8,
+    ];
+    let guid = Uuid::from_bytes(bytes);
+
+    let actual_seed = create_seed_from_guid_x_y(guid, 1, 2);
+
+    let expected_seed = [
+        0x46, 0x6, 0xd0, 0x28, 0xfc, 0xb4, 0xfe, 0x54, 0x8d, 0xac, 0xee, 0x04, 0x57, 0x40, 0x9a,
+        0x1a,
+    ];
+    assert_eq!(actual_seed, expected_seed);
+}
+
+#[test]
+fn test_create_seed_from_guid_bytes_x_y() {
+    let bytes = [
+        0xa1, 0xa2, 0xa3, 0xa4, 0xb1, 0xb2, 0xc1, 0xc2, 0xd1, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
+        0xd8,
+    ];
+    let guid = Uuid::from_bytes(bytes);
+
+    let actual_seed = create_seed_from_guid_bytes_x_y(guid.as_bytes(), 1, 2);
+
+    let expected_seed = [
+        0x46, 0x6, 0xd0, 0x28, 0xfc, 0xb4, 0xfe, 0x54, 0x8d, 0xac, 0xee, 0x04, 0x57, 0x40, 0x9a,
+        0x1a,
+    ];
+    assert_eq!(actual_seed, expected_seed);
+}
+
+#[test]
+fn test_create_seed_from_bytes() {
+    let guid_bytes = [
+        0xa1, 0xa2, 0xa3, 0xa4, 0xb1, 0xb2, 0xc1, 0xc2, 0xd1, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
+        0xd8,
+    ];
+
+    let x_bytes = 1_isize.to_ne_bytes();
+    let y_bytes = 2_isize.to_ne_bytes();
+    let capacity = guid_bytes.len() + x_bytes.len() + y_bytes.len();
+    let mut byte_vec = Vec::with_capacity(capacity);
+    byte_vec.extend_from_slice(&guid_bytes);
+    byte_vec.extend_from_slice(&x_bytes);
+    byte_vec.extend_from_slice(&y_bytes);
+
+    let actual_seed = create_seed_from_bytes(byte_vec);
+    let expected_seed = [
+        0x46, 0x6, 0xd0, 0x28, 0xfc, 0xb4, 0xfe, 0x54, 0x8d, 0xac, 0xee, 0x04, 0x57, 0x40, 0x9a,
+        0x1a,
+    ];
+    assert_eq!(actual_seed, expected_seed);
+}

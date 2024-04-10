@@ -27,11 +27,7 @@ pub fn create_seed_from_guid_x_y(guid: Uuid, x: isize, y: isize) -> [u8; 16] {
 /// * `y`:
 ///
 /// returns: [u8; 16]
-pub fn create_seed_from_guid_bytes_x_y(
-    guid_bytes: &[u8; 16],
-    x: isize,
-    y: isize,
-) -> [u8; 16] {
+pub fn create_seed_from_guid_bytes_x_y(guid_bytes: &[u8; 16], x: isize, y: isize) -> [u8; 16] {
     // Convert the GUID and isize values to byte arrays
     let x_bytes = x.to_ne_bytes();
     let y_bytes = y.to_ne_bytes();
