@@ -33,4 +33,3 @@ pub fn convert_str_to_title_case(s: &str) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
-
