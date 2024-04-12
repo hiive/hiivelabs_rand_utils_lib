@@ -15,7 +15,7 @@ pub fn create_seed_from_guid_x_y(guid: Uuid, x: isize, y: isize) -> [u8; 16] {
     // Convert the GUID to byte array
     let uuid_bytes = guid.as_bytes();
 
-    create_seed_from_guid_bytes_x_y(&uuid_bytes, x, y)
+    create_seed_from_guid_bytes_x_y(uuid_bytes, x, y)
 }
 
 ///
