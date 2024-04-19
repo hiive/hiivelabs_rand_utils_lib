@@ -118,7 +118,7 @@ pub fn create_worker_pool(pool_name: &str, pool_size: usize) {
 pub fn shutdown_worker_pool(pool_name: &str) {
     let mut pools = WORKER_POOLS.lock().unwrap();
 
-    if let Some(mut pool) = pools.get_mut(pool_name) {
+    if let Some(pool) = pools.get_mut(pool_name) {
         let count = pool.workers.len();
         for _ in 0..count {
             pool.submit_task(0, || {
