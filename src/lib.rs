@@ -6,4 +6,8 @@ pub mod prelude {
     pub use crate::utils::string_utils_impl::{
         convert_str_to_title_case, convert_str_to_underscore_case,
     };
+    pub use crate::utils::weighted_picker_impl::WeightedPicker;
+    pub use crate::utils::worker_pool::worker_pool_impl::{
+        create_worker_pool, shutdown_worker_pool, submit_task_to_worker_pool, submit_tasks_to_worker_pool
+    };
 }
