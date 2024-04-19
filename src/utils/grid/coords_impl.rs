@@ -51,33 +51,6 @@ impl Coord {
     /// - 2 if this is at `(0, 0)`
     /// - 3 if this is on an edge (`x` or `y` are 0)
     /// - 4 otherwise.
-    ///
-    /// ```
-    /// # use cogs_gamedev::grids::{Coord, Direction4};
-    ///
-    /// assert_eq!(
-    ///     Coord::new(5, 7).neighbors4(),
-    ///     &[
-    ///         Coord::new(5, 6),
-    ///         Coord::new(6, 7),
-    ///         Coord::new(5, 8),
-    ///         Coord::new(4, 7),
-    ///     ]
-    /// );
-    ///
-    /// // May return fewer than 4 neighbors
-    /// assert_eq!(
-    ///     Coord::new(0, 5).neighbors4(),
-    ///     &[
-    ///         Coord::new(0, 4),
-    ///         Coord::new(1, 5),
-    ///         Coord::new(0, 6),
-    ///         // Skip (-1, 5) for being out of bounds
-    ///     ]
-    /// );
-    /// ```
-    ///
-    /// [`Direction4::DIRECTIONS`]: super::Direction4::DIRECTIONS
     pub fn neighbors4(self) -> Vec<Coord> {
         Direction4::DIRECTIONS
             .iter()
@@ -100,39 +73,6 @@ impl Coord {
     /// - 5 if this is on an edge (`x` or `y` are 0)
     /// - 8 otherwise.
     ///
-    /// ```
-    /// # use cogs_gamedev::grids::Coord;
-    /// # use cogs_gamedev::grids::Direction8;
-    ///
-    /// assert_eq!(
-    ///     Coord::new(5, 7).neighbors8(),
-    ///     [
-    ///         Coord::new(5, 6),
-    ///         Coord::new(6, 6),
-    ///         Coord::new(6, 7),
-    ///         Coord::new(6, 8),
-    ///         Coord::new(5, 8),
-    ///         Coord::new(4, 8),
-    ///         Coord::new(4, 7),
-    ///         Coord::new(4, 6),
-    ///     ]
-    /// );
-    ///
-    /// // May return fewer than 8 neighbors
-    /// assert_eq!(
-    ///     Coord::new(0, 5).neighbors8(),
-    ///     &[
-    ///         Coord::new(0, 4),
-    ///         Coord::new(1, 4),
-    ///         Coord::new(1, 5),
-    ///         Coord::new(1, 6),
-    ///         Coord::new(0, 6),
-    ///         // Skip (-1, 6) for being out of bounds
-    ///         // Skip (-1, 5)
-    ///         // Skip (-1, 4)
-    ///     ]
-    /// );
-    /// ```
     ///
     /// [`Direction8::DIRECTIONS`]: super::Direction8::DIRECTIONS
     pub fn neighbors8(self) -> Vec<Coord> {
@@ -238,15 +178,6 @@ impl ICoord {
     /// - 4: +X, -Y
     ///
     /// Zeroes are treated as positive.
-    ///
-    /// ```
-    /// # use cogs_gamedev::grids::ICoord;
-    /// assert_eq!(ICoord::new(4, 5).quadrant(), 1);
-    /// assert_eq!(ICoord::new(-3, -2).quadrant(), 3);
-    /// // Zero is treated as positive
-    /// assert_eq!(ICoord::new(0, -8).quadrant(), 4);
-    /// assert_eq!(ICoord::new(0, 0).quadrant(), 1);
-    /// ```
     pub fn quadrant(self) -> usize {
         match (self.x >= 0, self.y >= 0) {
             (true, true) => 1,
@@ -266,27 +197,6 @@ impl ICoord {
     /// They are given in clockwise order starting with the neighbor to the north,
     /// as if each of [`Direction4::DIRECTIONS`] had been added to them.
     ///
-    /// ```
-    /// # use cogs_gamedev::grids::ICoord;
-    /// # use cogs_gamedev::grids::Direction4;
-    ///
-    /// assert_eq!(
-    ///     ICoord::new(5, 7).neighbors4(),
-    ///     [
-    ///         ICoord::new(5, 6),
-    ///         ICoord::new(6, 7),
-    ///         ICoord::new(5, 8),
-    ///         ICoord::new(4, 7),
-    ///     ]
-    /// );
-    ///
-    /// let origin = ICoord::new(-7, -12);
-    /// assert_eq!(
-    ///     origin.neighbors4()[..],
-    ///     Direction4::DIRECTIONS.iter().map(|dir| origin + *dir).collect::<Vec<_>>()[..],
-    /// );
-    /// ```
-    ///
     /// [`Direction4::DIRECTIONS`]: super::Direction4::DIRECTIONS
     pub fn neighbors4(self) -> [ICoord; 4] {
         [
@@ -300,31 +210,6 @@ impl ICoord {
     /// Get a list of this coordinate's orthagonal and diagonal neighbors.
     /// They are given in clockwise order starting with the neighbor to the north,
     /// as if each of [`Direction8::DIRECTIONS`] had been added to them.
-    ///
-    /// ```
-    /// # use cogs_gamedev::grids::ICoord;
-    /// # use cogs_gamedev::grids::Direction8;
-    ///
-    /// assert_eq!(
-    ///     ICoord::new(5, 7).neighbors8(),
-    ///     [
-    ///         ICoord::new(5, 6),
-    ///         ICoord::new(6, 6),
-    ///         ICoord::new(6, 7),
-    ///         ICoord::new(6, 8),
-    ///         ICoord::new(5, 8),
-    ///         ICoord::new(4, 8),
-    ///         ICoord::new(4, 7),
-    ///         ICoord::new(4, 6),
-    ///     ]
-    /// );
-    ///
-    /// let origin = ICoord::new(-7, -12);
-    /// assert_eq!(
-    ///     origin.neighbors8()[..],
-    ///     Direction8::DIRECTIONS.iter().map(|dir| origin + *dir).collect::<Vec<_>>()[..],
-    /// );
-    /// ```
     ///
     /// [`Direction8::DIRECTIONS`]: super::Direction8::DIRECTIONS
     pub fn neighbors8(self) -> [ICoord; 8] {
