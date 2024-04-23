@@ -1,14 +1,11 @@
-use crate::utils::worker_pool::task_impl::Task;
 use crate::utils::worker_pool::worker_pool_message_impl::WorkerPoolMessage;
 use lazy_static::lazy_static;
 use log;
 use std::any::Any;
-use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
-use std::fmt::format;
-use std::sync::mpsc::{Receiver, Sender};
-use std::sync::{Arc, Condvar, Mutex, TryLockResult};
+use std::sync::mpsc::Sender;
+use std::sync::{Arc, Condvar, Mutex};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
@@ -125,17 +122,9 @@ impl WorkerPool {
 
     fn submit_message(&self, message: WorkerPoolMessage) {
         let (lock, cvar) = &*self.queue;
-        let mut guard = lock.lock().unwrap();
-        match message {
-            WorkerPoolMessage::Shutdown => {
-                guard.push(message);
-                cvar.notify_one();
-            }
-            WorkerPoolMessage::WorkerTask(ref task) => {
-                guard.push(message);
-                cvar.notify_one();
-            }
-        }
+        let mut guard = lock.lock().expect("Cannot get lock");
+        guard.push(message);
+        cvar.notify_one();
     }
 }
 
@@ -181,7 +170,7 @@ pub fn shutdown_worker_pool(pool_name: &str) {
                             log::info!("Worker Pool thread [{thread_name}] shut down");
                         }
                         Err(err) => {
-                            log::error!("Error shutting down Worker Pool thread");
+                            log::error!("Error shutting down Worker Pool thread: {err:?}");
                         }
                     }
                 }
@@ -195,32 +184,6 @@ pub fn shutdown_worker_pool(pool_name: &str) {
     pools.remove(pool_name);
     log::info!("Worker pool [{pool_name}] shut down.");
 }
-
-// pub fn submit_task_to_worker_pool(
-//     pool_name: &str,
-//     priority: usize,
-//     task_id: Option<String>,
-//     task_func: impl FnOnce() -> (bool, Option<Box<dyn Any + Send>>) + Send + 'static) {
-//     let pools = WORKER_POOLS.lock().unwrap();
-//     if let Some(pool) = pools.get(pool_name) {
-//         pool.submit_task(priority, task_id, task_func);
-//     } else {
-//         // Optionally handle the error if the pool does not exist
-//         log::error!("Worker pool [{pool_name}] does not exist.");
-//     }
-// }
-
-// pub fn submit_tasks_to_worker_pool(
-//     pool_name: &str,
-//     tasks: Vec<(usize, Option<String>, impl FnOnce() -> (bool, Option<Box<dyn Any + Send>>) + Send + 'static)>) {
-//     let pools = WORKER_POOLS.lock().unwrap();
-//     if let Some(pool) = pools.get(pool_name) {
-//         pool.submit_tasks(tasks);
-//     } else {
-//         // Optionally handle the error if the pool does not exist
-//         log::error!("Worker pool [{pool_name}] does not exist.");
-//     }
-// }
 
 pub fn submit_message_to_worker_pool(pool_name: &str, message: WorkerPoolMessage) {
     let pools = WORKER_POOLS.lock().unwrap();
