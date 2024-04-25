@@ -14,4 +14,5 @@ pub mod prelude {
         submit_message_to_worker_pool, //submit_task_to_worker_pool, submit_tasks_to_worker_pool
     };
     pub use crate::utils::worker_pool::worker_pool_message_impl::WorkerPoolMessage;
+    pub use crate::utils::grid::coords_impl::{UDim, TIndex, IDim};
 }

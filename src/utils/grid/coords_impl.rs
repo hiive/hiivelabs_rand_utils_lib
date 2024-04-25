@@ -1,6 +1,12 @@
 // https://github.com/gamma-delta/cogs/blob/master/src/grids/coords.rs
 //! Integer-based coordinates.
 
+// TODO: convert everything to these three properties.
+// TODO: move them elsewhere
+pub type TIndex = usize;
+pub type IDim = isize;
+pub type UDim = usize;
+
 use itertools::Itertools;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};

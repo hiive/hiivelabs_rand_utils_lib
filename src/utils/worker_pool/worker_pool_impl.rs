@@ -12,7 +12,7 @@ use std::time::Duration;
 struct WorkerPool {
     queue: Arc<(Mutex<BinaryHeap<WorkerPoolMessage>>, Condvar)>,
     workers: Vec<(String, JoinHandle<()>)>,
-    job_result_tx: Option<Sender<(Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>)>>,
+    // job_result_tx: Option<Sender<(Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>)>>,
 }
 
 impl WorkerPool {
@@ -39,7 +39,7 @@ impl WorkerPool {
         WorkerPool {
             queue,
             workers,
-            job_result_tx,
+            // job_result_tx,
         }
     }
 
@@ -86,39 +86,6 @@ impl WorkerPool {
             }
         }
     }
-
-    // fn submit_task<F>(&self, priority: usize, task_id: Option<String>, f: F)
-    // where
-    //     F: FnOnce() -> (bool, Option<Box<dyn Any + Send>>) + Send + 'static,
-    // {
-    //     let task = WorkerTask {
-    //         priority,
-    //         task_id,
-    //         job: Box::new(f),
-    //     };
-    //     let (lock, cvar) = &*self.queue;
-    //     let mut guard = lock.lock().unwrap();
-    //     guard.push(task);
-    //     cvar.notify_one();
-    // }
-
-    // fn submit_tasks<F>(&self, mut tasks: Vec<(usize, Option<String>, F)>)
-    //     where
-    //         F: FnOnce() -> (bool, Option<Box<dyn Any + Send>>) + Send + 'static,
-    // {
-    //     let (lock, cvar) = &*self.queue;
-    //     let mut guard = lock.lock().unwrap();
-    //     for (priority, task_id, f) in tasks.drain(..) {
-    //         let task = WorkerTask {
-    //             priority,
-    //             task_id,
-    //             job: Box::new(f),
-    //         };
-    //         guard.push(task);
-    //     }
-    //
-    //     cvar.notify_all();
-    // }
 
     fn submit_message(&self, message: WorkerPoolMessage) {
         let (lock, cvar) = &*self.queue;
