@@ -48,8 +48,7 @@ impl Direction4 {
     // ```
     pub fn rotate_by(self, steps_clockwise: isize) -> Self {
         let idx = self as isize;
-        let new_idx =
-            ((idx + steps_clockwise).rem_euclid(Self::DIRECTIONS.len() as isize)) as usize;
+        let new_idx = (idx + steps_clockwise).rem_euclid(Self::DIRECTIONS.len() as isize) as usize;
         Self::DIRECTIONS[new_idx]
     }
 

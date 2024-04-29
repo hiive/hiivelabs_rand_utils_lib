@@ -1,5 +1,6 @@
 // https://github.com/gamma-delta/cogs/blob/master/src/grids/rectangles.rs
 
+use crate::prelude::{IDim, UDim};
 use crate::utils::grid::coords_impl::ICoord;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -8,14 +9,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct IRect {
-    pub left: isize,
-    pub top: isize,
-    pub width: usize,
-    pub height: usize,
+    pub left: IDim,
+    pub top: IDim,
+    pub width: UDim,
+    pub height: UDim,
 }
 
 impl IRect {
-    pub fn new(left: isize, top: isize, width: usize, height: usize) -> Self {
+    pub fn new(left: IDim, top: IDim, width: UDim, height: UDim) -> Self {
         Self {
             left,
             top,
@@ -25,7 +26,7 @@ impl IRect {
     }
 
     /// Return a new rectangle centered at the given position with the given w/h
-    pub fn centered(center: ICoord, width: usize, height: usize) -> Self {
+    pub fn centered(center: ICoord, width: UDim, height: UDim) -> Self {
         let top = center.y - height as isize / 2;
         let left = center.x - width as isize / 2;
         Self::new(left, top, width, height)

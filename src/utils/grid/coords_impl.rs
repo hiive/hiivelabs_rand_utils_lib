@@ -24,13 +24,13 @@ use std::{
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Coord {
-    pub x: usize,
-    pub y: usize,
+    pub x: UDim,
+    pub y: UDim,
 }
 
 impl Coord {
     /// Make a new coord.
-    pub fn new(x: usize, y: usize) -> Self {
+    pub fn new(x: UDim, y: UDim) -> Self {
         Self { x, y }
     }
 
@@ -166,8 +166,8 @@ impl Display for Coord {
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ICoord {
-    pub x: isize,
-    pub y: isize,
+    pub x: IDim,
+    pub y: IDim,
 }
 
 impl ICoord {
