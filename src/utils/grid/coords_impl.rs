@@ -7,6 +7,7 @@ pub type TIndex = usize;
 pub type IDim = isize;
 pub type UDim = usize;
 
+// TODO - switch to bitcode(?) serialization
 use itertools::Itertools;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -28,6 +29,7 @@ pub struct Coord {
     pub y: UDim,
 }
 
+#[allow(dead_code)]
 impl Coord {
     /// Make a new coord.
     pub fn new(x: UDim, y: UDim) -> Self {
@@ -170,6 +172,7 @@ pub struct ICoord {
     pub y: IDim,
 }
 
+#[allow(dead_code)]
 impl ICoord {
     /// Create a new ICoord
     pub fn new(x: isize, y: isize) -> Self {

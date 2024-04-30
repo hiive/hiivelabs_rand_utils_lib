@@ -9,6 +9,10 @@ use std::sync::{Arc, Condvar, Mutex};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
+
+#[allow(dead_code)]
+pub struct JobResult((Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>));
+
 struct WorkerPool {
     queue: Arc<(Mutex<BinaryHeap<WorkerPoolMessage>>, Condvar)>,
     workers: Vec<(String, JoinHandle<()>)>,
@@ -19,7 +23,7 @@ impl WorkerPool {
     pub fn new(
         name: String,
         num_threads: usize,
-        job_result_tx: Option<Sender<(Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>)>>,
+        job_result_tx: Option<Sender<JobResult>>,
     ) -> Self {
         let queue = Arc::new((Mutex::new(BinaryHeap::new()), Condvar::new()));
         let mut workers = Vec::with_capacity(num_threads);
@@ -46,7 +50,7 @@ impl WorkerPool {
     fn worker_thread(
         name: String,
         queue: Arc<(Mutex<BinaryHeap<WorkerPoolMessage>>, Condvar)>,
-        job_result_tx: Option<Sender<(Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>)>>,
+        job_result_tx: Option<Sender<JobResult>>,
     ) {
         loop {
             let task = {
@@ -62,7 +66,7 @@ impl WorkerPool {
                 WorkerPoolMessage::Shutdown => {
                     log::info!("Worker pool thread [{name}] shutting down...");
                     if let Some(job_result_tx) = &job_result_tx {
-                        let ret_package = (None, None, None);
+                        let ret_package = JobResult((None, None, None));
                         log::info!("Sending shutdown ack for worker pool thread : {name}");
                         if let Err(tx_result_err) = job_result_tx.send(ret_package) {
                             log::error!("Failed to return thread result: {tx_result_err}")
@@ -75,7 +79,7 @@ impl WorkerPool {
                     if let Some(job_result_tx) = &job_result_tx {
                         // we have some data to return.
                         if let Some(t_id) = task.task_id {
-                            let ret_package = (Some(t_id), task.task_info, task_result);
+                            let ret_package: JobResult = JobResult((Some(t_id), task.task_info, task_result));
                             log::info!("Sending job result: {t_id}: {:?}", task.task_info);
                             if let Err(tx_result_err) = job_result_tx.send(ret_package) {
                                 log::error!("Failed to return thread result: {tx_result_err}")
@@ -103,7 +107,7 @@ lazy_static! {
 pub fn create_worker_pool(
     pool_name: &str,
     pool_size: usize,
-    job_result_tx: Option<Sender<(Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>)>>,
+    job_result_tx: Option<Sender<JobResult>>,
 ) {
     let mut pools = WORKER_POOLS.lock().unwrap();
     if !pools.contains_key(pool_name) {

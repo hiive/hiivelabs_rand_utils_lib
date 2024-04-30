@@ -19,6 +19,7 @@ pub enum Direction4 {
     West,
 }
 
+#[allow(dead_code)]
 impl Direction4 {
     /// All the directions in order.
     /// This is used internally for rotations and flips.
@@ -110,6 +111,7 @@ pub enum Direction8 {
     NorthWest,
 }
 
+#[allow(dead_code)]
 impl Direction8 {
     /// All the directions in order.
     /// This is used internally for rotations and flips.

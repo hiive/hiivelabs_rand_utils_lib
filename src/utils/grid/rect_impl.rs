@@ -15,6 +15,7 @@ pub struct IRect {
     pub height: UDim,
 }
 
+#[allow(dead_code)]
 impl IRect {
     pub fn new(left: IDim, top: IDim, width: UDim, height: UDim) -> Self {
         Self {
@@ -81,6 +82,7 @@ pub struct RectIter {
     exhausted: bool,
 }
 
+#[allow(dead_code)]
 impl RectIter {
     pub fn new(rect: IRect) -> Self {
         Self {
