@@ -9,7 +9,6 @@ use std::sync::{Arc, Condvar, Mutex};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
-
 #[allow(dead_code)]
 pub struct JobResult((Option<usize>, Option<usize>, Option<Box<dyn Any + Send>>));
 
@@ -20,11 +19,7 @@ struct WorkerPool {
 }
 
 impl WorkerPool {
-    pub fn new(
-        name: String,
-        num_threads: usize,
-        job_result_tx: Option<Sender<JobResult>>,
-    ) -> Self {
+    pub fn new(name: String, num_threads: usize, job_result_tx: Option<Sender<JobResult>>) -> Self {
         let queue = Arc::new((Mutex::new(BinaryHeap::new()), Condvar::new()));
         let mut workers = Vec::with_capacity(num_threads);
 
@@ -79,7 +74,8 @@ impl WorkerPool {
                     if let Some(job_result_tx) = &job_result_tx {
                         // we have some data to return.
                         if let Some(t_id) = task.task_id {
-                            let ret_package: JobResult = JobResult((Some(t_id), task.task_info, task_result));
+                            let ret_package: JobResult =
+                                JobResult((Some(t_id), task.task_info, task_result));
                             log::info!("Sending job result: {t_id}: {:?}", task.task_info);
                             if let Err(tx_result_err) = job_result_tx.send(ret_package) {
                                 log::error!("Failed to return thread result: {tx_result_err}")
