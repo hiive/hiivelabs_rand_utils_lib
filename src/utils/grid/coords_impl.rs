@@ -7,6 +7,7 @@ pub type TIndex = usize;
 pub type IDim = isize;
 pub type UDim = usize;
 
+
 // TODO - switch to bitcode(?) serialization
 use itertools::Itertools;
 #[cfg(feature = "serde")]

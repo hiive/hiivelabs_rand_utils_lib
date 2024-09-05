@@ -134,7 +134,7 @@ impl<T> WeightedPicker<T> {
     /// where `T` is `()`, if you want `usize` outputs, I guess.
     pub fn get_idx<R: Rng + ?Sized>(&self, rng: &mut R) -> usize {
         let column = rng.gen_range(0..self.prob.len());
-        let coin_toss = rng.gen::<f64>() < self.prob[column];
+        let coin_toss = rng.random::<f64>() < self.prob[column];
         if coin_toss {
             column
         } else {
