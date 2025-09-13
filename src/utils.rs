@@ -11,5 +11,6 @@ pub mod test_utils;
 #[cfg(test)]
 mod seed_utils_tests;
 
+mod json_schema;
 #[cfg(test)]
 mod string_utils_tests;

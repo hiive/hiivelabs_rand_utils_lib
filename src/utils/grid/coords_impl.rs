@@ -1,6 +1,7 @@
 // https://github.com/gamma-delta/cogs/blob/master/src/grids/coords.rs
 //! Integer-based coordinates.
 
+#[allow(unexpected_cfgs)]
 // TODO: convert everything to these three properties.
 // TODO: move them elsewhere
 pub type TIndex = usize;
@@ -71,7 +72,7 @@ impl Coord {
             .collect_vec()
     }
 
-    /// Get a list of this coordinate's orthagonal and diagonal neighbors.
+    /// Get a list of this coordinate's orthogonal and diagonal neighbors.
     /// They are given in clockwise order starting with the neighbor to the north,
     /// as if each of [`Direction8::DIRECTIONS`] had been added to them.
     ///
